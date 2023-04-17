@@ -1,0 +1,138 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>ArcGIS Maps SDK for JavaScript Tutorials: Display a map</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.26/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.26/"></script>
+
+    <script>
+      function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+
+      function loadConfig() {
+        return new Promise((resolve, reject) => {
+          fetch("config.json")
+            .then((response) => response.json())
+            .then((config) => resolve(config))
+            .catch((err) => {
+              console.error("Error loading config:", err);
+              reject(err);
+            });
+        });
+      }
+
+      function initMap(config) {
+        // Override the basemap from the config file if a query parameter is provided
+        const queryBasemap = getQueryParam("basemap");
+        if (queryBasemap) {
+          config.basemap = queryBasemap;
+        }
+
+        require(["esri/Map", "esri/views/MapView"], function (Map, MapView) {
+          const map = new Map({
+            basemap: config.basemap, // Load basemap from config file or query parameter
+          });
+
+          const view = new MapView({
+            map: map,
+            center: [-118.805, 34.027], // Longitude, latitude
+            zoom: 13, // Zoom level
+            container: "viewDiv", // Div element
+          });
+        });
+      }
+
+      loadConfig()
+        .then((config) => initMap(config))
+        .catch((err) => console.error("Failed to initialize map:", err));
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html>
+
+<!-- <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <title>ArcGIS Maps SDK for JavaScript Tutorials: Display a map</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.26/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.26/"></script>
+
+    <script>
+      function loadConfig() {
+        return new Promise((resolve, reject) => {
+          fetch("config.json")
+            .then((response) => response.json())
+            .then((config) => resolve(config))
+            .catch((err) => {
+              console.error("Error loading config:", err);
+              reject(err);
+            });
+        });
+      }
+
+      function initMap(config) {
+        require(["esri/Map", "esri/views/MapView"], function (Map, MapView) {
+          const map = new Map({
+            basemap: config.basemap, // Load basemap from config file
+          });
+
+          const view = new MapView({
+            map: map,
+            center: [-118.805, 34.027], // Longitude, latitude
+            zoom: 13, // Zoom level
+            container: "viewDiv", // Div element
+          });
+        });
+      }
+
+      loadConfig()
+        .then((config) => initMap(config))
+        .catch((err) => console.error("Failed to initialize map:", err));
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+  </body>
+</html> -->
